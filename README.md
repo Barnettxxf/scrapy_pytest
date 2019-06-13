@@ -1,4 +1,4 @@
-### 思路
+### Scrapy Pytest
 
- - 入参为Request, Spider
- - 在测试函数中调用Spider的需要测试的方法
+### Install
+`pip install -e git+https://github.com/Barnettxxf/scrapy_pytest#egg=scrapy_pytest`
