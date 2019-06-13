@@ -10,7 +10,7 @@ from scrapy.utils.gz import gunzip
 
 import zlib
 
-from src.scrapy_pytest.utils import FilesystemCacheStorage
+from ..utils.storage import FilesystemCacheStorage
 
 ACCEPTED_ENCODINGS = [b'gzip', b'deflate']
 
