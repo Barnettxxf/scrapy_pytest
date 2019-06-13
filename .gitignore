@@ -1,0 +1,4 @@
+.pytest_cache
+.scrapy/
+.idea
+__pycache__/
