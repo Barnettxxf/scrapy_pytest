@@ -4,8 +4,8 @@ Date: 2019-06-13 18:55
 Usage: 
 """
 
-from src.utils.response import RetrieveResponse
-from src.utils.storage import FilesystemCacheStorage
+from src.scrapy_pytest.utils import RetrieveResponse
+from src.scrapy_pytest.utils import FilesystemCacheStorage
 
 
 def format_response_fixture(spidercls, request, cache_dir, storage=FilesystemCacheStorage):

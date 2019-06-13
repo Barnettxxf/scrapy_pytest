@@ -5,8 +5,8 @@ Usage:
 """
 import pytest
 import scrapy
+from scrapy_pytest import format_response_fixture
 
-from src.format_fixture import format_response_fixture
 from tests.spiders.baidu import BaiduSpider, HTTPCACHE_DIR
 
 
