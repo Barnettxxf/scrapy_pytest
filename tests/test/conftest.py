@@ -7,11 +7,11 @@ import pytest
 import scrapy
 
 from src.format_fixture import format_response_fixture
-from tests.spiders.baidu import BaiduSpider
+from tests.spiders.baidu import BaiduSpider, HTTPCACHE_DIR
 
 
 @pytest.fixture
 def response():
     request = scrapy.Request('https://www.baidu.com')
-    cachedir = '/Users/barnettxu/Projects/scrapy_pytest/tests/spiders/.scrapy'
-    return format_response_fixture(BaiduSpider, cachedir, request)
+    cachedir = HTTPCACHE_DIR
+    return format_response_fixture(BaiduSpider, request, cachedir)

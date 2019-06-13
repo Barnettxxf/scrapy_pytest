@@ -3,9 +3,12 @@ Author: xuxiongfeng
 Date: 2019-06-13 17:20
 Usage: 
 """
+import os
 
 import scrapy
 from scrapy.crawler import CrawlerProcess
+
+HTTPCACHE_DIR = os.path.join(os.path.abspath(__file__).split('tests')[0], 'cache')
 
 
 class BaiduSpider(scrapy.Spider):
@@ -24,7 +27,7 @@ class BaiduSpider(scrapy.Spider):
 
 
 if __name__ == '__main__':
-    settings = {'HTTPCACHE_ENABLED': True, 'HTTPCACHE_DIR': '.', 'HTTPCACHE_EXPIRATION_SECS': 60 * 60}
+    settings = {'HTTPCACHE_ENABLED': True, 'HTTPCACHE_DIR': HTTPCACHE_DIR, 'HTTPCACHE_EXPIRATION_SECS': 60 * 60}
     cp = CrawlerProcess(settings=settings)
     cp.crawl(BaiduSpider)
     cp.start()
