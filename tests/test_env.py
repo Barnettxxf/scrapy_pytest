@@ -6,6 +6,7 @@ Usage:
 
 from scrapy_pytest import env
 from scrapy_pytest.settings.default_settings import HTTPCACHE_DIR
+from scrapy_pytest.settings import Settings
 
 
 def test_get_httpcache():
@@ -24,3 +25,8 @@ def test_update():
     value = 'TESTUPDATEVALUE'
     env.update(name, value)
     assert env.get('TESTUPDATENAME') == value
+
+
+def test_httpcache():
+    env.set_httpcache_dir('/Users/barnettxu/Projects/scrapy_pytest/cache')
+    assert Settings().get('HTTPCACHE_DIR') == env.get_httpcache_dir()

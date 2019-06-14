@@ -9,6 +9,9 @@ from collections import defaultdict
 from scrapy.utils.misc import load_object
 import pickle
 
+from src.scrapy_pytest.utils.templates import create_subfile, tmpl_fixture, tmpl_fixture_import, \
+    tmpl_parse_func, tmpl_fixture_spider
+from . import RetrieveResponse
 from .utils.request import request_from_dict
 from .settings import Settings
 
@@ -53,9 +56,74 @@ class ResponseFactory:
     def __init__(self, spider_cls, settings=None):
         self.req_factory = RequestFactory(spider_cls, settings)
         self.spider_cls = spider_cls
-        self.storage = self.req_factory.storage
+        self.storage = RetrieveResponse(settings)
+        self.filter_set = set()
+        self._result = {}
 
     def gen(self):
         for parse_func, reqs in self.req_factory.reqs.items():
             for req in reqs:
+                if parse_func in self.filter_set:
+                    continue
+                self.filter_set.add(parse_func)
                 yield parse_func, self.storage.retrieve_response(self.spider_cls, req)
+
+    @property
+    def result(self):
+        if len(self._result) == 0:
+            for parse_func, rsp in self.gen():
+                if parse_func not in self._result.keys():
+                    self._result[parse_func] = rsp
+        return self._result
+
+
+class TemplateFactory:
+    def __init__(self, spider_cls, project_dir, settings=None, test_dir_name='tests'):
+        self.rsp_factory = ResponseFactory(spider_cls, settings)
+        self.project_dir = project_dir
+        self.test_dir_name = test_dir_name
+        self.spider_cls = spider_cls
+
+        if settings is None:
+            settings = Settings()
+        if isinstance(settings, dict):
+            settings = Settings(settings)
+
+        self.settings = settings
+
+        test_dir = os.path.join(self.project_dir, self.test_dir_name)
+        self.test_spider_dir = os.path.join(test_dir, self.spider_cls.name)
+
+    def gen_template(self):
+        self._create_body()
+
+    def _create_body(self):
+        spider_name = self.spider_cls.__name__
+        spider_module = self.spider_cls.__module__
+        httpcache_dir = self.settings['HTTPCACHE_DIR']
+
+        parse_func_tmpls = []
+        fixture_tmpls = []
+        for parse_func in self.rsp_factory.result.keys():
+            parse_func_tmpls.append(tmpl_parse_func.substitute(**{
+                'spider_parse_func': parse_func.__name__,
+                'spider': spider_name
+            }))
+            fixture_tmpls.append(tmpl_fixture.substitute(**{
+                'spider_parse_func': parse_func.__name__,
+                'spider': spider_name
+            }))
+        fixture = '\n\n'.join(fixture_tmpls)
+        fixture_import = tmpl_fixture_import.substitute(**{
+            'spider_module': spider_module,
+            'spider': spider_name,
+            'httpcache_dir': httpcache_dir
+        })
+        fixture_spider = tmpl_fixture_spider.substitute(**{
+            'spider': spider_name
+        })
+
+        conftest = '\n\n'.join([fixture_import, fixture_spider, fixture])
+        parse_func = '\n\n'.join(parse_func_tmpls)
+        create_subfile(self.test_spider_dir, 'conftest', conftest)
+        create_subfile(self.test_spider_dir, 'test_parse', parse_func)

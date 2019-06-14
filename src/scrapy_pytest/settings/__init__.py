@@ -14,9 +14,9 @@ class Settings(BaseSettings):
         return cls._instance
 
     def __init__(self, values=None, priority='project'):
-        if not self.flag:
+        if not Settings.flag:
             return
-        self.flag = False
+        Settings.flag = False
         super().__init__()
         self.setmodule(default_settings_module, 'default')
         for name, val in six.iteritems(self):
