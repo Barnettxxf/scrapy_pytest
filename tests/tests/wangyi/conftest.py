@@ -13,5 +13,9 @@ def WangyiSpider():
 
 
 @pytest.fixture
+def parse_detail_response():
+    return rsp_factory.result['parse_detail']
+
+@pytest.fixture
 def parse_response():
     return rsp_factory.result['parse']

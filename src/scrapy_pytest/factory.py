@@ -33,7 +33,7 @@ class RequestFactory:
     def _gen_request(self):
         for rpath in self.storage.find_request_path(self.spider_cls):
             metadata = self._read_meta(rpath)
-            yield request_from_dict(metadata)
+            yield request_from_dict(metadata, self.spider_cls)
 
     def _read_meta(self, rpath):
         metapath = os.path.join(rpath, 'pickled_meta')
