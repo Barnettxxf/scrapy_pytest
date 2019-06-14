@@ -8,7 +8,7 @@ from string import Template
 
 tmpl_fixture = Template("""
 @pytest.fixture
-def ${spider_parse_func}_resposne():
+def ${spider_parse_func}_response():
     return rsp_factory.result['${spider_parse_func}']
 """)
 
@@ -29,8 +29,8 @@ def ${spider}():
 """)
 
 tmpl_parse_func = Template("""
-def test_${spider_parse_func}(${spider_parse_func}_resposne, ${spider}):
-    gen = ${spider}().${spider_parse_func}(${spider_parse_func}_resposne)
+def test_${spider_parse_func}(${spider_parse_func}_response, ${spider}):
+    gen = ${spider}().${spider_parse_func}(${spider_parse_func}_response)
     for result in gen:
         # specified operation
         pass

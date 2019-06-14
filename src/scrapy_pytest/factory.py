@@ -104,21 +104,21 @@ class TemplateFactory:
             parse_func_tmpls.append(tmpl_parse_func.substitute(**{
                 'spider_parse_func': parse_func,
                 'spider': spider_name
-            }))
+            }).strip())
             fixture_tmpls.append(tmpl_fixture.substitute(**{
                 'spider_parse_func': parse_func,
-            }))
+            }).strip())
         fixture = '\n\n'.join(fixture_tmpls)
         fixture_import = tmpl_fixture_import.substitute(**{
             'spider_module': spider_module,
             'spider': spider_name,
             'httpcache_dir': httpcache_dir
-        })
+        }).strip()
         fixture_spider = tmpl_fixture_spider.substitute(**{
             'spider': spider_name
-        })
+        }).strip()
 
-        conftest = '\n\n'.join([fixture_import, fixture_spider, fixture])
-        parse_func = '\n\n'.join(parse_func_tmpls)
-        create_subfile(self.test_spider_dir, 'conftest', conftest)
-        create_subfile(self.test_spider_dir, 'test_parse', parse_func)
+        conftest = '\n\n\n'.join([fixture_import, fixture_spider, fixture])
+        parse_func = '\n\n\n'.join(parse_func_tmpls)
+        create_subfile(self.test_spider_dir, 'conftest', conftest + '\n')
+        create_subfile(self.test_spider_dir, 'test_parse', parse_func + '\n')

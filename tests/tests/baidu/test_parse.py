@@ -1,5 +1,5 @@
-def test_parse(parse_resposne, BaiduSpider):
-    gen = BaiduSpider().parse(parse_resposne)
+def test_parse(parse_response, BaiduSpider):
+    gen = BaiduSpider().parse(parse_response)
     for result in gen:
         # specified operation
         pass

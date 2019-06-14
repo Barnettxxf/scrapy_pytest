@@ -14,11 +14,11 @@ from cache_dir import cache_dir
 HTTPCACHE_DIR = os.path.join(os.path.abspath(__file__).split('tests')[0], 'cache')
 
 
-class BaiduSpider(scrapy.Spider):
-    name = 'baidu'
+class WangyiSpider(scrapy.Spider):
+    name = 'wangyi'
 
     def start_requests(self):
-        yield scrapy.Request(url='https://www.baidu.com', headers={
+        yield scrapy.Request(url='https://news.163.com/', headers={
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'})
 
     def parse(self, response):
@@ -36,5 +36,5 @@ if __name__ == '__main__':
         'HTTPCACHE_STORAGE': env.get('HTTPCACHE_STORAGE')
     }
     cp = CrawlerProcess(settings=settings)
-    cp.crawl(BaiduSpider)
+    cp.crawl(WangyiSpider)
     cp.start()
