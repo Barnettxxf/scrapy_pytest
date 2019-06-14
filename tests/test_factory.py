@@ -8,10 +8,8 @@ import os
 import scrapy
 from scrapy.http import Response
 from scrapy_pytest import env
-from scrapy_pytest.env import default_settings
-from scrapy_pytest.factory import RequestFactory, ResponseFactory
+from scrapy_pytest.factory import RequestFactory, ResponseFactory, TemplateFactory
 
-from src.scrapy_pytest.factory import TemplateFactory
 from tests.spiders.baidu import BaiduSpider
 
 
@@ -33,6 +31,7 @@ def test_rsp_factory():
 
 
 def test_tmpl_factory():
+    project_dir = os.path.dirname(__file__)
     env.set_httpcache_dir('/Users/barnettxu/Projects/scrapy_pytest/cache')
-    tmpl_factory = TemplateFactory(BaiduSpider, os.path.dirname(__file__), settings=default_settings)
+    tmpl_factory = TemplateFactory(BaiduSpider, project_dir)
     tmpl_factory.gen_template()

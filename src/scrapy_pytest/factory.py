@@ -9,11 +9,11 @@ from collections import defaultdict
 from scrapy.utils.misc import load_object
 import pickle
 
-from src.scrapy_pytest.utils.templates import create_subfile, tmpl_fixture, tmpl_fixture_import, \
-    tmpl_parse_func, tmpl_fixture_spider
+from .utils.templates import create_subfile, tmpl_fixture, tmpl_fixture_import, \
+    tmpl_parse_func, tmpl_fixture_spider, create_init
 from . import RetrieveResponse
 from .utils.request import request_from_dict
-from .settings import Settings
+from .env import Settings
 
 
 class RequestFactory:
@@ -56,7 +56,7 @@ class ResponseFactory:
     def __init__(self, spider_cls, settings=None):
         self.req_factory = RequestFactory(spider_cls, settings)
         self.spider_cls = spider_cls
-        self.storage = RetrieveResponse(settings)
+        self.storage = RetrieveResponse(settings or self.req_factory.settings)
         self.filter_set = set()
         self._result = {}
 
@@ -66,33 +66,29 @@ class ResponseFactory:
                 if parse_func in self.filter_set:
                     continue
                 self.filter_set.add(parse_func)
-                yield parse_func, self.storage.retrieve_response(self.spider_cls, req)
+                yield parse_func, self.storage.retrieve_response(
+                    self.spider_cls, req)
 
     @property
     def result(self):
         if len(self._result) == 0:
             for parse_func, rsp in self.gen():
                 if parse_func not in self._result.keys():
-                    self._result[parse_func] = rsp
+                    self._result[parse_func.__name__] = rsp
         return self._result
 
 
 class TemplateFactory:
-    def __init__(self, spider_cls, project_dir, settings=None, test_dir_name='tests'):
+    def __init__(self, spider_cls, project_dir, settings=Settings(), test_dir_name='tests'):
         self.rsp_factory = ResponseFactory(spider_cls, settings)
         self.project_dir = project_dir
         self.test_dir_name = test_dir_name
         self.spider_cls = spider_cls
 
-        if settings is None:
-            settings = Settings()
-        if isinstance(settings, dict):
-            settings = Settings(settings)
-
-        self.settings = settings
-
         test_dir = os.path.join(self.project_dir, self.test_dir_name)
+        create_init(test_dir)
         self.test_spider_dir = os.path.join(test_dir, self.spider_cls.name)
+        create_init(self.test_spider_dir)
 
     def gen_template(self):
         self._create_body()
@@ -100,18 +96,17 @@ class TemplateFactory:
     def _create_body(self):
         spider_name = self.spider_cls.__name__
         spider_module = self.spider_cls.__module__
-        httpcache_dir = self.settings['HTTPCACHE_DIR']
+        httpcache_dir = Settings().get('HTTPCACHE_DIR')
 
         parse_func_tmpls = []
         fixture_tmpls = []
         for parse_func in self.rsp_factory.result.keys():
             parse_func_tmpls.append(tmpl_parse_func.substitute(**{
-                'spider_parse_func': parse_func.__name__,
+                'spider_parse_func': parse_func,
                 'spider': spider_name
             }))
             fixture_tmpls.append(tmpl_fixture.substitute(**{
-                'spider_parse_func': parse_func.__name__,
-                'spider': spider_name
+                'spider_parse_func': parse_func,
             }))
         fixture = '\n\n'.join(fixture_tmpls)
         fixture_import = tmpl_fixture_import.substitute(**{

@@ -9,7 +9,7 @@ from string import Template
 tmpl_fixture = Template("""
 @pytest.fixture
 def ${spider_parse_func}_resposne():
-    return rsp_factory.result[_${spider}.${spider_parse_func}]
+    return rsp_factory.result['${spider_parse_func}']
 """)
 
 tmpl_fixture_import = Template("""

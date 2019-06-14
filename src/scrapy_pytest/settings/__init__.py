@@ -10,8 +10,8 @@ class Settings(BaseSettings):
 
     def __new__(cls, *args, **kwargs):
         if not hasattr(Settings, '_instance'):
-            cls._instance = object.__new__(cls)
-        return cls._instance
+            Settings._instance = object.__new__(cls)
+        return Settings._instance
 
     def __init__(self, values=None, priority='project'):
         if not Settings.flag:
