@@ -33,11 +33,9 @@ def test_rsp_factory():
 
 
 def test_tmpl_factory():
-    project_dir = os.path.dirname(__file__)
-    tmpl_factory = TemplateFactory(BaiduSpider, project_dir)
+    tmpl_factory = TemplateFactory(BaiduSpider)
     tmpl_factory.gen_template()
-    project_dir = os.path.dirname(__file__)
-    tmpl_factory = TemplateFactory(WangyiSpider, project_dir)
+    tmpl_factory = TemplateFactory(WangyiSpider)
     tmpl_factory.gen_template()
 
 

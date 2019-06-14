@@ -79,9 +79,9 @@ class ResponseFactory:
 
 
 class TemplateFactory:
-    def __init__(self, spider_cls, project_dir, settings=Settings(), test_dir_name='tests'):
+    def __init__(self, spider_cls, project_dir=None, settings=Settings(), test_dir_name='tests'):
         self.rsp_factory = ResponseFactory(spider_cls, settings)
-        self.project_dir = project_dir
+        self.project_dir = project_dir or os.getcwd()
         self.test_dir_name = test_dir_name
         self.spider_cls = spider_cls
 
