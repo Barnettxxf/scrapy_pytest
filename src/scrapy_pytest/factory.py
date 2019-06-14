@@ -108,7 +108,7 @@ class TemplateFactory:
             fixture_tmpls.append(tmpl_fixture.substitute(**{
                 'spider_parse_func': parse_func,
             }).strip())
-        fixture = '\n\n'.join(fixture_tmpls)
+        fixture = '\n\n\n'.join(fixture_tmpls)
         fixture_import = tmpl_fixture_import.substitute(**{
             'spider_module': spider_module,
             'spider': spider_name,
