@@ -3,7 +3,6 @@ Author: xuxiongfeng
 Date: 2019-06-13 17:57
 Usage: 
 """
-import copy
 
 from scrapy.extensions.httpcache import FilesystemCacheStorage
 from scrapy.http import TextResponse, Response
@@ -23,12 +22,12 @@ try:
 except ImportError:
     pass
 
-default_settings = Settings()
-
 
 class RetrieveResponse:
-    def __init__(self, settings=default_settings, storage_cls=FilesystemCacheStorage):
-        if not isinstance(settings, Settings):
+    def __init__(self, settings=None, storage_cls=FilesystemCacheStorage):
+        if settings is None:
+            settings = Settings()
+        if isinstance(settings, dict):
             settings = Settings(settings)
 
         self.storage = storage_cls(settings)

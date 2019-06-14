@@ -9,6 +9,6 @@ from .utils.response import RetrieveResponse
 from .settings import Settings
 
 
-def format_response_fixture(spidercls, request, settings=Settings(), storage_cls=FilesystemCacheStorage):
+def format_response_fixture(spidercls, request, settings=Settings, storage_cls=FilesystemCacheStorage):
     storage = RetrieveResponse(settings=settings, storage_cls=storage_cls)
     return storage.retrieve_response(spidercls, request)
