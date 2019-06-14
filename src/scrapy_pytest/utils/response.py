@@ -3,6 +3,8 @@ Author: xuxiongfeng
 Date: 2019-06-13 17:57
 Usage: 
 """
+import copy
+
 from scrapy.extensions.httpcache import FilesystemCacheStorage
 from scrapy.http import TextResponse, Response
 from scrapy.responsetypes import responsetypes
@@ -10,7 +12,7 @@ from scrapy.utils.gz import gunzip
 
 import zlib
 
-from ..settings import settings as _settings
+from ..settings import Settings
 
 ACCEPTED_ENCODINGS = [b'gzip', b'deflate']
 
@@ -21,9 +23,14 @@ try:
 except ImportError:
     pass
 
+default_settings = Settings()
+
 
 class RetrieveResponse:
-    def __init__(self, settings=_settings, storage_cls=FilesystemCacheStorage):
+    def __init__(self, settings=default_settings, storage_cls=FilesystemCacheStorage):
+        if not isinstance(settings, Settings):
+            settings = Settings(settings)
+
         self.storage = storage_cls(settings)
 
     def retrieve_response(self, spider, request):

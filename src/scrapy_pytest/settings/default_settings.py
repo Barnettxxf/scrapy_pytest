@@ -1,5 +1,3 @@
-import os
-
-HTTPCACHE_DIR = os.environ['SCRAPY_HTTPCACHE_DIR']
+HTTPCACHE_DIR = '/tmp/scrapy_httpcache'
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_GZIP = False
