@@ -28,7 +28,7 @@ class RequestFactory:
         self.storage = load_object(self.settings['HTTPCACHE_STORAGE'])(self.settings)
 
     def _gen_request(self):
-        for rpath in self.storage.find_request_path(self.settings, self.spider_cls):
+        for rpath in self.storage.find_request_path(self.spider_cls):
             metadata = self._read_meta(rpath)
             yield request_from_dict(metadata)
 

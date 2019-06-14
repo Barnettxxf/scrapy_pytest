@@ -7,6 +7,7 @@ import os
 
 import scrapy
 from scrapy.crawler import CrawlerProcess
+from scrapy_pytest import env
 
 HTTPCACHE_DIR = os.path.join(os.path.abspath(__file__).split('tests')[0], 'cache')
 
@@ -27,7 +28,11 @@ class BaiduSpider(scrapy.Spider):
 
 
 if __name__ == '__main__':
-    settings = {'HTTPCACHE_ENABLED': True, 'HTTPCACHE_DIR': HTTPCACHE_DIR, 'HTTPCACHE_EXPIRATION_SECS': 60 * 60}
+    settings = {
+        'HTTPCACHE_ENABLED': True,
+        'HTTPCACHE_DIR': '/Users/barnettxu/Projects/scrapy_pytest/cache',
+        'HTTPCACHE_STORAGE': env.get('HTTPCACHE_STORAGE')
+    }
     cp = CrawlerProcess(settings=settings)
     cp.crawl(BaiduSpider)
     cp.start()

@@ -11,6 +11,8 @@ from scrapy.utils.gz import gunzip
 
 import zlib
 
+from scrapy.utils.misc import load_object
+
 from ..settings import Settings
 
 ACCEPTED_ENCODINGS = [b'gzip', b'deflate']
@@ -24,13 +26,13 @@ except ImportError:
 
 
 class RetrieveResponse:
-    def __init__(self, settings=None, storage_cls=FilesystemCacheStorage):
+    def __init__(self, settings=None):
         if settings is None:
             settings = Settings()
         if isinstance(settings, dict):
             settings = Settings(settings)
 
-        self.storage = storage_cls(settings)
+        self.storage = load_object(settings['HTTPCACHE_STORAGE'])(settings)
 
     def retrieve_response(self, spider, request):
         response = self.storage.retrieve_response(spider, request)

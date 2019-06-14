@@ -3,6 +3,7 @@ Author: xuxiongfeng
 Date: 2019-06-14 10:42
 Usage: 
 """
+import six
 from scrapy import Request, FormRequest
 
 
@@ -17,5 +18,5 @@ def request_to_dict(request):
 
 def request_from_dict(metadata):
     request = Request(url=metadata['request']['url'])
-    metadata['request']['cls'] = eval(metadata['request']['cls'])
-    return request.replace(**metadata)
+    metadata['request']['cls'] = eval(metadata['request']['cls']) if six.string_types else metadata['request']['cls']
+    return request.replace(**metadata['request'])
