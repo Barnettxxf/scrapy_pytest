@@ -6,7 +6,7 @@ from . import default_settings as default_settings_module
 
 class Settings(BaseSettings):
     # against run ~.__init__ twice
-    flag = True
+    _flag = True
 
     def __new__(cls, *args, **kwargs):
         if not hasattr(Settings, '_instance'):
@@ -14,9 +14,9 @@ class Settings(BaseSettings):
         return Settings._instance
 
     def __init__(self, values=None, priority='project'):
-        if not Settings.flag:
+        if not Settings._flag:
             return
-        Settings.flag = False
+        Settings._flag = False
         super().__init__()
         self.setmodule(default_settings_module, 'default')
         for name, val in six.iteritems(self):
