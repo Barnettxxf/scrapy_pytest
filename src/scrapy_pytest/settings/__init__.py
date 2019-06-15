@@ -5,7 +5,7 @@ from . import default_settings as default_settings_module
 
 
 class Settings(BaseSettings):
-    # against run ~.__init__ twice
+    # prevent ~.__init__ from running twice
     _flag = True
 
     def __new__(cls, *args, **kwargs):
