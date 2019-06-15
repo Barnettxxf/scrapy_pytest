@@ -1,9 +1,3 @@
-"""
-Author: xuxiongfeng
-Date: 2019-06-13 18:55
-Usage: 
-"""
-
 from .utils.response import RetrieveResponse
 from .settings import Settings
 

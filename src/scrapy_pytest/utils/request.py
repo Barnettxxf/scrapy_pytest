@@ -1,8 +1,3 @@
-"""
-Author: xuxiongfeng
-Date: 2019-06-14 10:42
-Usage: 
-"""
 import six
 from scrapy import Request, FormRequest
 

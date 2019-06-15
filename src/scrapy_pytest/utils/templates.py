@@ -1,8 +1,3 @@
-"""
-Author: xuxiongfeng
-Date: 2019-06-14 16:27
-Usage: 
-"""
 import os
 from string import Template
 

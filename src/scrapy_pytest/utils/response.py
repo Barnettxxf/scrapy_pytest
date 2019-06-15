@@ -4,7 +4,6 @@ Date: 2019-06-13 17:57
 Usage: 
 """
 
-from scrapy.extensions.httpcache import FilesystemCacheStorage
 from scrapy.http import TextResponse, Response
 from scrapy.responsetypes import responsetypes
 from scrapy.utils.gz import gunzip

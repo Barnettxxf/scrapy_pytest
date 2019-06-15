@@ -1,8 +1,3 @@
-"""
-Author: xuxiongfeng
-Date: 2019-06-14 11:56
-Usage: 
-"""
 import os
 from collections import defaultdict
 
