@@ -22,7 +22,7 @@ class RequestFactory:
 
         self.settings = settings
 
-        self._reqeusts = defaultdict(list)
+        self._requests = defaultdict(list)
         self.storage = load_object(self.settings['HTTPCACHE_STORAGE'])(self.settings)
 
     def _gen_request(self):
@@ -39,12 +39,12 @@ class RequestFactory:
 
     @property
     def reqs(self):
-        if len(self._reqeusts) == 0:
+        if len(self._requests) == 0:
             for req in self._gen_request():
-                callback = req.callback or self.spider_cls().parse
-                self._reqeusts[callback].append(req)
+                callback = req.callback or self.spider_cls.parse
+                self._requests[callback.__name__].append(req)
 
-        return self._reqeusts
+        return self._requests
 
     def close(self):
         self.storage.close()
@@ -60,14 +60,14 @@ class ResponseFactory:
 
     def gen(self):
         for parse_func, reqs in self.req_factory.reqs.items():
-            reqs = [self.storage.retrieve_response(self.spider_cls, req) for req in reqs]
-            yield parse_func, reqs
+            rsps = [self.storage.retrieve_response(self.spider_cls, req) for req in reqs]
+            yield parse_func, rsps
 
     @property
     def result(self):
         if len(self._result) == 0:
-            for parse_func, rsp in self.gen():
-                self._result[parse_func.__name__].append(rsp)
+            for parse_func, rsps in self.gen():
+                self._result[parse_func].extend(rsps)
         return self._result
 
     def close(self):

@@ -5,5 +5,3 @@
 
 
 ### TODO
- - 处理多个response的共同测试的问题
- - 添加支持DMBStorage
