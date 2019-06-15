@@ -27,9 +27,11 @@ def test_req_factory():
 
 def test_rsp_factory():
     rsp_factory = ResponseFactory(BaiduSpider)
-    for parse_func, response in rsp_factory.gen():
+    for parse_func, responses in rsp_factory.gen():
         assert type(parse_func).__name__ == 'method'
-        assert isinstance(response, Response)
+        assert isinstance(responses, list)
+        for response in responses:
+            assert isinstance(response, Response)
 
 
 def test_tmpl_factory():

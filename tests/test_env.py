@@ -8,16 +8,18 @@ from scrapy_pytest import env
 from scrapy_pytest.settings.default_settings import HTTPCACHE_DIR
 from scrapy_pytest.settings import Settings
 
+from cache_dir import cache_dir
+
 
 def test_get_httpcache():
-    cache_dir = env.get_httpcache_dir()
-    assert cache_dir == HTTPCACHE_DIR
+    _cache_dir = env.get_httpcache_dir()
+    assert _cache_dir == HTTPCACHE_DIR
 
 
 def test_set_httpcache():
-    cache_dir = '/tmp/test_httpcache'
-    env.set_httpcache_dir(cache_dir)
-    assert env.get_httpcache_dir() == cache_dir
+    _cache_dir = '/tmp/test_httpcache'
+    env.set_httpcache_dir(_cache_dir)
+    assert env.get_httpcache_dir() == _cache_dir
 
 
 def test_update():
@@ -28,5 +30,5 @@ def test_update():
 
 
 def test_httpcache():
-    env.set_httpcache_dir('/Users/barnettxu/Projects/scrapy_pytest/cache')
+    env.set_httpcache_dir(cache_dir)
     assert Settings().get('HTTPCACHE_DIR') == env.get_httpcache_dir()
