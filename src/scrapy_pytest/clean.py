@@ -5,6 +5,8 @@ from scrapy.utils.request import request_fingerprint
 from .filter import RequestFilter
 from . import env
 
+__all__ = ['get_all_spider_httpcache', 'remove', 'clean_no_need_cache']
+
 
 def get_target_dir(cond, rfilter, spider_httpcache_path):
     for req in rfilter[cond]:
