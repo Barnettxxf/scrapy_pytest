@@ -19,6 +19,7 @@ def ${spider_parse_func}_response(empty, request):
 tmpl_fixture_import = Template("""
 # automatically created by scrapy_pytest
 
+
 import pytest
 from scrapy_pytest import factory, env
 from ${spider_module} import ${spider} as _${spider}
@@ -29,9 +30,8 @@ rsp_factory = factory.ResponseFactory(_${spider})
 
     
 @pytest.fixture(scope='session')
-def empty():
-    yield
-    rsp_factory.close()
+def empty(request):
+    request.addfinalizer(rsp_factory.close)
 """)
 
 tmpl_fixture_spider = Template("""
