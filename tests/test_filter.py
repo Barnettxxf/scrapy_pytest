@@ -1,10 +1,14 @@
+import pytest
 from scrapy_pytest import env
 from scrapy_pytest.filter import RequestFilter, ResponseFilter
 
 from cache_dir import cache_dir
 from tests.spiders.Wangyi import WangyiSpider
 
-env.set_httpcache_dir(cache_dir)
+
+@pytest.fixture(autouse=True)
+def set_httpcache_dir():
+    env.set_httpcache_dir(cache_dir)
 
 
 def test_request_filter():
@@ -19,5 +23,3 @@ def test_response_filter():
     assert f['300__gt__status']
     assert f['300__lt__status']
     assert f['aosou__in__url']
-
-

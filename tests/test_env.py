@@ -5,15 +5,9 @@ Usage:
 """
 
 from scrapy_pytest import env
-from scrapy_pytest.settings.default_settings import HTTPCACHE_DIR
 from scrapy_pytest.settings import Settings
 
 from cache_dir import cache_dir
-
-
-def test_get_httpcache():
-    _cache_dir = env.get_httpcache_dir()
-    assert _cache_dir == HTTPCACHE_DIR
 
 
 def test_set_httpcache():

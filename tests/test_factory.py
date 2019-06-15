@@ -5,6 +5,7 @@ Usage:
 """
 import os
 
+import pytest
 import scrapy
 from scrapy.http import Response
 from scrapy_pytest import env
@@ -14,7 +15,10 @@ from cache_dir import cache_dir
 from tests.spiders.Wangyi import WangyiSpider
 from tests.spiders.baidu import BaiduSpider
 
-env.set_httpcache_dir(cache_dir)
+
+@pytest.fixture(autouse=True)
+def set_httpcache_dir():
+    env.set_httpcache_dir(cache_dir)
 
 
 def test_req_factory():
@@ -39,5 +43,3 @@ def test_tmpl_factory():
     tmpl_factory.gen_template()
     tmpl_factory = TemplateFactory(WangyiSpider)
     tmpl_factory.gen_template()
-
-
