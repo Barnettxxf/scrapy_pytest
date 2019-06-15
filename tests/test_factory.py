@@ -20,7 +20,7 @@ env.set_httpcache_dir(cache_dir)
 def test_req_factory():
     req_factory = RequestFactory(BaiduSpider)
     for parse_func, reqs in req_factory.reqs.items():
-        assert type(parse_func).__name__ == 'method'
+        assert parse_func
         for req in reqs:
             assert isinstance(req, scrapy.Request)
 
@@ -28,7 +28,7 @@ def test_req_factory():
 def test_rsp_factory():
     rsp_factory = ResponseFactory(BaiduSpider)
     for parse_func, responses in rsp_factory.gen():
-        assert type(parse_func).__name__ == 'method'
+        assert parse_func
         assert isinstance(responses, list)
         for response in responses:
             assert isinstance(response, Response)
