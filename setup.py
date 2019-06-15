@@ -21,7 +21,7 @@ setup(
             ("Code", "https://github.com/Barnettxxf/scrapy_pytest"),
         )
     ),
-    license="BSD",
+    license="MIT",
     author="Barnett Xu",
     author_email="15102096586@163.com",
     # url="whatever",

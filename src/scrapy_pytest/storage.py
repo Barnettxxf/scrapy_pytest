@@ -53,6 +53,9 @@ class FilesystemCacheStorage(_FilesystemCacheStorage):
                     paths.append(os.path.join(_path, p))
         return paths
 
+    def close(self):
+        pass
+
 
 class DbmCacheStorage(_DbmCacheStorage):
     def __init__(self, settings=Settings()):
@@ -73,6 +76,9 @@ class DbmCacheStorage(_DbmCacheStorage):
 
     def find_request_path(self, spider_cls):
         raise NotImplementedError
+
+    def close(self):
+        self.db.close()
 
 
 storage_class = {

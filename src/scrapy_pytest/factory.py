@@ -51,6 +51,9 @@ class RequestFactory:
 
         return self._reqeusts
 
+    def close(self):
+        self.storage.close()
+
 
 class ResponseFactory:
     def __init__(self, spider_cls, settings=None):
@@ -58,24 +61,22 @@ class ResponseFactory:
         self.spider_cls = spider_cls
         self.storage = RetrieveResponse(settings or self.req_factory.settings)
         self.filter_set = set()
-        self._result = {}
+        self._result = defaultdict(list)
 
     def gen(self):
         for parse_func, reqs in self.req_factory.reqs.items():
-            for req in reqs:
-                if parse_func in self.filter_set:
-                    continue
-                self.filter_set.add(parse_func)
-                yield parse_func, self.storage.retrieve_response(
-                    self.spider_cls, req)
+            reqs = [self.storage.retrieve_response(self.spider_cls, req) for req in reqs]
+            yield parse_func, reqs
 
     @property
     def result(self):
         if len(self._result) == 0:
             for parse_func, rsp in self.gen():
-                if parse_func not in self._result.keys():
-                    self._result[parse_func.__name__] = rsp
+                self._result[parse_func.__name__].append(rsp)
         return self._result
+
+    def close(self):
+        self.req_factory.close()
 
 
 class TemplateFactory:
@@ -99,6 +100,7 @@ class TemplateFactory:
         httpcache_dir = Settings().get('HTTPCACHE_DIR')
 
         parse_func_tmpls = []
+        parse_func_tmpls.append('# automatically created by scrapy_pytest')
         fixture_tmpls = []
         for parse_func in self.rsp_factory.result.keys():
             parse_func_tmpls.append(tmpl_parse_func.substitute(**{
@@ -117,8 +119,10 @@ class TemplateFactory:
         fixture_spider = tmpl_fixture_spider.substitute(**{
             'spider': spider_name
         }).strip()
-
         conftest = '\n\n\n'.join([fixture_import, fixture_spider, fixture])
         parse_func = '\n\n\n'.join(parse_func_tmpls)
         create_subfile(self.test_spider_dir, 'conftest', conftest + '\n')
         create_subfile(self.test_spider_dir, 'test_parse', parse_func + '\n')
+
+    def __del__(self):
+        self.rsp_factory.close()

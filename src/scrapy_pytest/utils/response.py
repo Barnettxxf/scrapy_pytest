@@ -54,6 +54,9 @@ class RetrieveResponse:
 
         return response
 
+    def close(self):
+        self.storage.close()
+
     def _decode(self, body, encoding):
         if encoding == b'gzip' or encoding == b'x-gzip':
             body = gunzip(body)
