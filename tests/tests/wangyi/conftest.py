@@ -9,7 +9,7 @@ env.set_httpcache_dir('/home/barnett/Projects/scrapy_pytest/cache')
 
 rsp_factory = factory.ResponseFactory(_WangyiSpider)
 
-
+    
 @pytest.fixture(scope='session')
 def empty(request):
     request.addfinalizer(rsp_factory.close)
