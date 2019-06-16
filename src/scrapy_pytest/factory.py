@@ -6,7 +6,7 @@ import pickle
 
 from .utils.templates import create_subfile, tmpl_fixture, tmpl_fixture_import, \
     tmpl_parse_func, tmpl_fixture_spider, create_init
-from . import RetrieveResponse
+from . import RetrieveResponse, env
 from .utils.request import request_from_dict
 from .env import Settings
 
@@ -24,10 +24,11 @@ class RequestFactory:
 
         self._requests = defaultdict(list)
         self.storage = load_object(self.settings['HTTPCACHE_STORAGE'])(self.settings)
+        self.storage.open_spider(spider_cls)
 
     def _gen_request(self):
         for rpath in self.storage.find_request_path(self.spider_cls):
-            metadata = self._read_meta(rpath)
+            metadata = self.storage.read_meta(rpath)
             yield request_from_dict(metadata, self.spider_cls)
 
     def _read_meta(self, rpath):
@@ -47,14 +48,17 @@ class RequestFactory:
         return self._requests
 
     def close(self):
-        self.storage.close()
+        self.storage.close_spider(self.spider_cls)
 
 
 class ResponseFactory:
     def __init__(self, spider_cls, settings=None):
         self.req_factory = RequestFactory(spider_cls, settings)
         self.spider_cls = spider_cls
+
         self.storage = RetrieveResponse(settings or self.req_factory.settings)
+        self.storage.open(self.spider_cls)
+
         self.filter_set = set()
         self._result = defaultdict(list)
 
@@ -72,6 +76,7 @@ class ResponseFactory:
 
     def close(self):
         self.req_factory.close()
+        self.storage.close(self.spider_cls)
 
 
 class TemplateFactory:
@@ -92,7 +97,7 @@ class TemplateFactory:
     def _create_body(self):
         spider_name = self.spider_cls.__name__
         spider_module = self.spider_cls.__module__
-        httpcache_dir = Settings().get('HTTPCACHE_DIR')
+        httpcache_dir = env.get_httpcache_dir()
 
         parse_func_tmpls = []
         parse_func_tmpls.append('# automatically created by scrapy_pytest')
@@ -109,7 +114,8 @@ class TemplateFactory:
         fixture_import = tmpl_fixture_import.substitute(**{
             'spider_module': spider_module,
             'spider': spider_name,
-            'httpcache_dir': httpcache_dir
+            'httpcache_dir': httpcache_dir,
+            'storage': env.get_httpcache_storage()
         }).strip()
         fixture_spider = tmpl_fixture_spider.substitute(**{
             'spider': spider_name

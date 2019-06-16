@@ -7,7 +7,7 @@ import os
 
 import scrapy
 from scrapy.crawler import CrawlerProcess
-from scrapy_pytest import env
+from scrapy_pytest import env, storage_class
 
 from cache_dir import cache_dir
 
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     settings = {
         'HTTPCACHE_ENABLED': True,
         'HTTPCACHE_DIR': cache_dir,
-        'HTTPCACHE_STORAGE': env.get('HTTPCACHE_STORAGE')
+        'HTTPCACHE_STORAGE': storage_class['dbm']
     }
     cp = CrawlerProcess(settings=settings)
     cp.crawl(BaiduSpider)

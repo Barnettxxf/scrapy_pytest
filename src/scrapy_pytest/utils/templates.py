@@ -20,6 +20,7 @@ from scrapy_pytest import factory, env
 from ${spider_module} import ${spider} as _${spider}
 
 env.set_httpcache_dir('${httpcache_dir}')
+env.set_httpcache_storage('${storage}')
 
 rsp_factory = factory.ResponseFactory(_${spider})
 

@@ -53,8 +53,12 @@ class FilesystemCacheStorage(_FilesystemCacheStorage):
                     paths.append(os.path.join(_path, p))
         return paths
 
-    def close(self):
-        pass
+    def read_meta(self, rpath):
+        metapath = os.path.join(rpath, 'pickled_meta')
+        if not os.path.exists(metapath):
+            return  # not found
+        with open(metapath, 'rb') as f:
+            return pickle.load(f)
 
 
 class DbmCacheStorage(_DbmCacheStorage):
@@ -75,10 +79,14 @@ class DbmCacheStorage(_DbmCacheStorage):
         self.db['%s_time' % key] = str(time())
 
     def find_request_path(self, spider_cls):
-        raise NotImplementedError
+        paths = []
+        for k, v in self.db.items():
+            if k.endswith(b'_data'):
+                paths.append(k.split(b'_')[0].decode())
+        return paths
 
-    def close(self):
-        self.db.close()
+    def read_meta(self, rpath):
+        return pickle.loads(self.db['%s_data' % rpath])
 
 
 storage_class = {

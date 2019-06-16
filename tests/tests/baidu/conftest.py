@@ -6,6 +6,7 @@ from scrapy_pytest import factory, env
 from tests.spiders.baidu import BaiduSpider as _BaiduSpider
 
 env.set_httpcache_dir('/home/barnett/Projects/scrapy_pytest/cache')
+env.set_httpcache_storage('scrapy_pytest.storage.DbmCacheStorage')
 
 rsp_factory = factory.ResponseFactory(_BaiduSpider)
 

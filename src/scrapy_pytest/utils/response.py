@@ -53,8 +53,11 @@ class RetrieveResponse:
 
         return response
 
-    def close(self):
-        self.storage.close()
+    def open(self, spider_cls):
+        self.storage.open_spider(spider_cls)
+
+    def close(self, spider_cls):
+        self.storage.open_spider(spider_cls)
 
     def _decode(self, body, encoding):
         if encoding == b'gzip' or encoding == b'x-gzip':

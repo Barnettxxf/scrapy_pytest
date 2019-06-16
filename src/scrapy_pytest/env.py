@@ -25,6 +25,14 @@ def set_httpcache_dir(path):
     update('HTTPCACHE_DIR', path)
 
 
+def set_httpcache_storage(storage):
+    update('HTTPCACHE_STORAGE', storage)
+
+
+def get_httpcache_storage():
+    return get('HTTPCACHE_STORAGE')
+
+
 def keys():
     return default_settings.keys()
 

@@ -8,7 +8,7 @@ import os
 import pytest
 import scrapy
 from scrapy.http import Response
-from scrapy_pytest import env
+from scrapy_pytest import env, storage_class
 from scrapy_pytest.factory import RequestFactory, ResponseFactory, TemplateFactory
 
 from cache_dir import cache_dir
@@ -27,6 +27,13 @@ def test_req_factory():
         assert parse_func
         for req in reqs:
             assert isinstance(req, scrapy.Request)
+    env.update('HTTPCACHE_STORAGE', storage_class['dbm'])
+    rsp_factory = ResponseFactory(BaiduSpider)
+    for parse_func, responses in rsp_factory.gen():
+        assert parse_func
+        assert isinstance(responses, list)
+        for response in responses:
+            assert isinstance(response, Response)
 
 
 def test_rsp_factory():
@@ -36,9 +43,21 @@ def test_rsp_factory():
         assert isinstance(responses, list)
         for response in responses:
             assert isinstance(response, Response)
+    env.update('HTTPCACHE_STORAGE', storage_class['dbm'])
+    rsp_factory = ResponseFactory(BaiduSpider)
+    for parse_func, responses in rsp_factory.gen():
+        assert parse_func
+        assert isinstance(responses, list)
+        for response in responses:
+            assert isinstance(response, Response)
 
 
 def test_tmpl_factory():
+    tmpl_factory = TemplateFactory(BaiduSpider)
+    tmpl_factory.gen_template()
+    tmpl_factory = TemplateFactory(WangyiSpider)
+    tmpl_factory.gen_template()
+    env.update('HTTPCACHE_STORAGE', storage_class['dbm'])
     tmpl_factory = TemplateFactory(BaiduSpider)
     tmpl_factory.gen_template()
     tmpl_factory = TemplateFactory(WangyiSpider)
