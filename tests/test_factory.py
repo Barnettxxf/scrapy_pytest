@@ -53,12 +53,12 @@ def test_rsp_factory():
 
 
 def test_tmpl_factory():
-    tmpl_factory = TemplateFactory(BaiduSpider)
+    tmpl_factory = TemplateFactory(BaiduSpider, test_dir_name='auto_gen_tests')
     tmpl_factory.gen_template()
-    tmpl_factory = TemplateFactory(WangyiSpider)
+    tmpl_factory = TemplateFactory(WangyiSpider, test_dir_name='auto_gen_tests')
     tmpl_factory.gen_template()
     env.update('HTTPCACHE_STORAGE', storage_class['dbm'])
-    tmpl_factory = TemplateFactory(BaiduSpider)
+    tmpl_factory = TemplateFactory(BaiduSpider, test_dir_name='auto_gen_tests')
     tmpl_factory.gen_template()
-    tmpl_factory = TemplateFactory(WangyiSpider)
+    tmpl_factory = TemplateFactory(WangyiSpider, test_dir_name='auto_gen_tests')
     tmpl_factory.gen_template()
