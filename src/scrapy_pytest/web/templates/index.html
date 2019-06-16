@@ -8,10 +8,12 @@
 </head>
 <body>
 <h2 class="text-center">HTTPCACHE MANAGER</h2>
-<ul>
+
+<div style="width:90%; margin: 0 auto;">
     <table class="table table-striped table-hover">
         <thead>
         <tr>
+            <th>Id</th>
             <th>Storage</th>
             <th>Spider Name</th>
             <th>Parse Func</th>
@@ -20,25 +22,20 @@
         </tr>
         </thead>
         <tbody>
-        {% for storage, spiders in responses.items() %}
-        {% for spider_name, parse_funcs in spiders.items() %}
-        {% for parse_func, rsps in parse_funcs.items() %}
-        {% for rsp in rsps %}
-        <tr>
-            <td>{{ storage }}</td>
-            <td>{{ spider_name }}</td>
-            <td>{{ parse_func }}</td>
-            <td>{{ rsp.request.url }}</td>
-            <td>{{ rsp.request.meta }}</td>
+        {% for req in reqs %}
+        <tr data-id="{{ request.id }}">
+            <td>{{ req.id }}</td>
+            <td>{{ req.parse_func.spider.storage.name }}</td>
+            <td>{{ req.parse_func.spider.name }}</td>
+            <td>{{ req.parse_func.name }}</td>
+            <td>{{ req.data | loads_url }}</td>
+            <td>{{ req.data | loads_meta }}</td>
         </tr>
-        {% endfor %}
-        {% endfor %}
-        {% endfor %}
         {% endfor %}
         </tbody>
     </table>
-</ul>
-
+    <div class="text-center"> {{ pagination.links }}</div>
+</div>
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>

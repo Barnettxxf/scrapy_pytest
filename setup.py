@@ -30,7 +30,9 @@ setup(
     install_requires=[
         "scrapy",
         "pytest",
-        "flask"
+        "flask",
+        "flask_sqlalchemy",
+        "flask_paginate",
     ],
     entry_points={
         "console_scripts": ["cacheweb = scrapy_pytest.server:cli"]}

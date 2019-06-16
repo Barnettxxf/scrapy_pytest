@@ -8,6 +8,9 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = False
     SECRET_KEY = 'scrapy_pytest'
+    SQLALCHEMY_DATABASE_URI = f'sqlite:///{os.path.join(basedir, "data.sqlite")}'
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class ProductionConfig(Config):
