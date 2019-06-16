@@ -35,6 +35,7 @@ class RetrieveResponse:
 
     def retrieve_response(self, spider, request):
         response = self.storage.retrieve_response(spider, request)
+        response.request = request
         return self.http_compression(response)
 
     def http_compression(self, response):
