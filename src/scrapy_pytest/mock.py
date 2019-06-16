@@ -16,3 +16,12 @@ def mock_spidercls():
             pass
 
     return MockSpider
+
+
+def get_spidercls_with_mock_parse(spider_name, parsefunc_name):
+    _mock_parse_func = mock_parse()
+    _mock_parse_func.__name__ = parsefunc_name
+    _mock_spidercls = mock_spidercls()
+    setattr(_mock_spidercls, parsefunc_name, _mock_parse_func)
+    setattr(_mock_spidercls, 'name', spider_name)
+    return _mock_spidercls
