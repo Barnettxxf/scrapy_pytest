@@ -9,6 +9,9 @@ class Storage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
 
+    def __repr__(self):
+        return '<Storage(id=%s, name=%s)>' % (self.id, self.name)
+
 
 class Spider(db.Model):
     __tablename__ = 'spider'
@@ -18,6 +21,9 @@ class Spider(db.Model):
     name = db.Column(db.String(40), nullable=False)
 
     storage = db.relationship('Storage', backref='spider')
+
+    def __repr__(self):
+        return '<Spider(id=%s, name=%s, storage_id=%s)>' % (self.id, self.name, self.storage_id)
 
 
 class ParseFunc(db.Model):
@@ -29,6 +35,9 @@ class ParseFunc(db.Model):
 
     spider = db.relationship('Spider', backref='parse_func')
 
+    def __repr__(self):
+        return '<ParseFunc(id=%s, name=%s, spider_id=%s)>' % (self.id, self.name, self.spider_id)
+
 
 class Request(db.Model):
     __tablename__ = 'request'
@@ -38,3 +47,7 @@ class Request(db.Model):
     data = db.Column(db.Binary, nullable=False)
 
     parse_func = db.relationship('ParseFunc', backref='request')
+
+    def __repr__(self):
+        return '<Request(id=%s, name=%s, parse_func_id=%s, spider=%s)>' % (
+            self.id, self.name, self.parse_func_id, self.spider.name)
