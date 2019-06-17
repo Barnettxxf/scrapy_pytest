@@ -4,7 +4,7 @@ from scrapy_pytest import env
 
 app_ctx = app.app_context()
 app_ctx.push()
-from scrapy_pytest.web.models import ParseFunc, Reqeust, Spider, Storage
+from scrapy_pytest.web.models import ParseFunc, Request, Spider, Storage
 
 from cache_dir import cache_dir
 
@@ -13,5 +13,5 @@ def test_web_utils():
     env.set_httpcache_dir(cache_dir)
     with app.app_context():
         save_data()
-        print(Reqeust.query.all())
+        print(Request.query.all())
     app_ctx.pop()
