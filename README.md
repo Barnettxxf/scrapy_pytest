@@ -11,6 +11,7 @@ Scrapy-Pytest，是基于`pytest`的方便为`Scrapy`框架写的爬虫设计的
 ```bash
 pip install -e git+https://github.com/Barnettxxf/scrapy_pytest#egg=scrapy_pytest
 ```
+
  该方法会在项目根目录上自动创建`src`文件并将本项目代码克隆到`src`文件夹中作为`library root`
 2. 将本项目克隆到本地，切换至其文件夹中，在用`pip`安装
 ```bash
