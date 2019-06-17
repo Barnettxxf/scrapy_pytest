@@ -29,7 +29,7 @@ cache_dir = os.path.join(os.path.dirname(__file__), 'cache')
 ```
 2. `Scrapy`爬虫例子, 并运行，将`HTTP`缓存下来，供后面测试使用
 ```python
-# content of spiders/wangyi.py
+# part content of spiders/wangyi.py, you can see all in tests/spiders/wangyi.py
 import scrapy
 from scrapy.crawler import CrawlerProcess
 from scrapy_pytest import storage_class
@@ -41,28 +41,13 @@ class WangyiSpider(scrapy.Spider):
     name = 'wangyi'
 
     def start_requests(self):
-        yield scrapy.Request(url='https://news.163.com/', headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'})
+        ...
 
     def parse(self, response):
-        a_list = response.xpath('//a')
-        for i, a in enumerate(a_list):
-            link = a.xpath('./@href').get()
-            text = a.xpath('./text()').get()
-            if link.startswith('http'):
-                yield scrapy.Request(url=link, headers={
-                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'},
-                                     callback=self.parse_detail)
-            if i == 6:
-                break
-            yield {'link': link, 'text': text}
+        ...
 
     def parse_detail(self, response):
-        a_list = response.xpath('//a')
-        for a in a_list:
-            link = a.xpath('./@href').get()
-            text = a.xpath('./text()').get()
-            yield {'link': link, 'text': text}
+        ...
 
 
 if __name__ == '__main__':
