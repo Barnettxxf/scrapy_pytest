@@ -44,10 +44,14 @@ class Request(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     parse_func_id = db.Column(db.Integer, db.ForeignKey('parse_func.id'))
+    storage_id = db.Column(db.Integer, db.ForeignKey('storage.id'))
+    spider_id = db.Column(db.Integer, db.ForeignKey('spider.id'))
     data = db.Column(db.Binary, nullable=False)
 
     parse_func = db.relationship('ParseFunc', backref='request')
+    spider = db.relationship('Spider', backref='request')
+    storage = db.relationship('Storage', backref='request')
 
     def __repr__(self):
-        return '<Request(id=%s, name=%s, parse_func_id=%s, spider=%s)>' % (
-            self.id, self.name, self.parse_func_id, self.spider.name)
+        return '<Request(id=%s, name=%s, parse_func_id=%s, spider=%s, storage=%s)>' % (
+            self.id, self.name, self.parse_func_id, self.spider.name, self.storage.name)

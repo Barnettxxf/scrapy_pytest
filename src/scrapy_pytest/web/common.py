@@ -63,7 +63,7 @@ def save_data(repeat=False):
                 container.append(_parse_func)
                 for rsp in rsps:
                     data = pickle.dumps(request_to_dict(rsp.request))
-                    _request = Request(data=data, parse_func=_parse_func)
+                    _request = Request(data=data, parse_func=_parse_func, spider=_spider, storage=_storage)
                     container.append(_request)
     db.session.add_all(container)
     db.session.commit()
