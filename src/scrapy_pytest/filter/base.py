@@ -64,3 +64,7 @@ class BaseFilter:
             if compare(cond, op, getattr(req_or_rsp, attr)):
                 r.append(req_or_rsp)
         return r
+
+    @property
+    def data(self) -> list:
+        return self._container

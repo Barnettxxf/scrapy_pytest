@@ -3,7 +3,7 @@ from scrapy import Request, FormRequest
 from ..mock import mock_spidercls, mock_parse
 
 
-def request_to_dict(request):
+def request_to_dict(request) -> dict:
     metadata = {}
     for x in ['url', 'method', 'headers', 'body', 'cookies', 'meta', 'flags',
               'encoding', 'priority', 'dont_filter', 'callback', 'errback']:
@@ -19,7 +19,7 @@ def request_to_dict(request):
     return metadata
 
 
-def request_from_dict(metadata, spider_cls):
+def request_from_dict(metadata, spider_cls) -> Request:
     request = Request(url=metadata['request']['url'])
     for x in metadata['request']:
         if x in ['callback', 'errback']:
