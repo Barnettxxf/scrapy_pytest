@@ -1,9 +1,10 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask_paginate import Pagination, get_page_parameter
-import pickle
 
+from ..mock import mock_spidercls
+from ..utils.request import request_from_dict
 from .config import DevelopmentConfig
-from .common import save_data
+from .common import save_data, delete_cache
 from .exts import db
 from .models import Request, Storage, Spider, ParseFunc
 
@@ -40,8 +41,9 @@ def home():
     distinct_storage = Storage.query.with_entities(Storage.name).distinct().all()
     distinct_spider = Spider.query.with_entities(Spider.name).distinct().all()
     distinct_parse_func = ParseFunc.query.with_entities(ParseFunc.name).distinct().all()
-    return render_template('index.html', **{'reqs': reqs, 'pagination': pagination, 'distinct_storage': distinct_storage,
-                                            'distinct_spider': distinct_spider, 'distinct_parse_func': distinct_parse_func})
+    return render_template('index.html',
+                           **{'reqs': reqs, 'pagination': pagination, 'distinct_storage': distinct_storage,
+                              'distinct_spider': distinct_spider, 'distinct_parse_func': distinct_parse_func})
 
 
 @app.route('/filter')
@@ -77,11 +79,19 @@ def filter_req():
     })
 
 
-@app.route('/del/<request_id>')
-def delete(request_id):
-    req = Request.query.filter_by(id=request_id).fisrt()
-    db.session.delete(req)
-    db.session.commit()
+@app.route('/del')
+def delete():
+    request_id = request.args.get('request_id')
+    if request_id:
+        req = Request.query.filter_by(id=request_id).fisrt()
+        if req:
+            _spidercls = mock_spidercls()
+            _request = request_from_dict(req.data, _spidercls)
+            storage_name = req.storage.name
+            delete_cache(storage_name, _spidercls, _request)
+
+            db.session.delete(req)
+            db.session.commit()
     return redirect(url_for('home'))
 
 

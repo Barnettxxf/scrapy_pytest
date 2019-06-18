@@ -1,6 +1,10 @@
+import dbm
 import os
 import pickle
 from collections import defaultdict
+from shutil import rmtree
+
+from scrapy.utils.request import request_fingerprint
 
 from ..mock import mock_spidercls
 from ..factory import ResponseFactory
@@ -33,6 +37,21 @@ def mock_spiders():
     return spidercls
 
 
+def delete_cache(storage_name, spidercls, request):
+    key = request_fingerprint(request)
+    if storage_name == 'filesystem':
+        request_httpcache_dir = os.path.join(env.get_httpcache_dir(), spidercls.name, key[0:2], key)
+        if os.path.exists(request_httpcache_dir):
+            rmtree(request_httpcache_dir)
+    else:
+        dbpath = os.path.join(env.get_httpcache_dir(), '%s.db' % spidercls.name)
+        db = dbm.open(dbpath, 'c')
+        if db:
+            del db['%s_data' % key]
+            del db['%s_time' % key]
+            db.close()
+
+
 def get_responses():
     responses = defaultdict(dict)
     for storage, spiderclss in mock_spiders().items():
@@ -62,8 +81,8 @@ def save_data(repeat=False):
                 _parse_func = ParseFunc(name=parse_func, spider=_spider)
                 container.append(_parse_func)
                 for rsp in rsps:
-                    data = pickle.dumps(request_to_dict(rsp.request))
-                    _request = Request(data=data, parse_func=_parse_func, spider=_spider, storage=_storage)
+                    _request = Request(data=request_to_dict(rsp.request), parse_func=_parse_func, spider=_spider,
+                                       storage=_storage)
                     container.append(_request)
     db.session.add_all(container)
     db.session.commit()

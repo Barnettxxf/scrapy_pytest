@@ -53,5 +53,5 @@ class Request(db.Model):
     storage = db.relationship('Storage', backref='requests')
 
     def __repr__(self):
-        return '<Request(id=%s, name=%s, parse_func_id=%s, spider=%s, storage=%s)>' % (
-            self.id, self.name, self.parse_func_id, self.spider.name, self.storage.name)
+        return '<Request(id=%s, url=%s,parse_func_id=%s, spider=%s, storage=%s)>' % (
+            self.id, self.data['url'], self.parse_func_id, self.spider.name, self.storage.name)

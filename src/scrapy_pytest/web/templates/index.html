@@ -18,19 +18,13 @@
         <strong>Storage:</strong> <select name="storage" id="storage" class="btn btn-default">
         <option value="all">all</option>
         {% for storage in distinct_storage %}
-            <option value="{{ storage.name }}">{{ storage.name }}</option>
+        <option value="{{ storage.name }}">{{ storage.name }}</option>
         {% endfor %}
     </select>
         <strong>Spider:</strong> <select name="spider" id="spider" class="btn btn-default">
         <option value="all">all</option>
         {% for spider in distinct_spider %}
-            <option value="{{ spider.name }}">{{ spider.name }}</option>
-        {% endfor %}
-    </select>
-        <strong>ParseFunc:</strong> <select name="parse_func" id="parse_func" class="btn btn-default">
-        <option value="all">all</option>
-        {% for parse_func in distinct_parse_func %}
-            <option value="{{ parse_func.name }}">{{ parse_func.name }}</option>
+        <option value="{{ spider.name }}">{{ spider.name }}</option>
         {% endfor %}
     </select>
         <button id="commit" class="btn btn-default" style="float: right;">Commit</button>
@@ -44,6 +38,7 @@
             <th>Parse Func</th>
             <th>Request URL</th>
             <th>Request Meta</th>
+            <th>Delete</th>
         </tr>
         </thead>
         <tbody id="content">
@@ -55,6 +50,7 @@
             <td>{{ req.parse_func.name }}</td>
             <td>{{ req.data | loads_url }}</td>
             <td>{{ req.data | loads_meta }}</td>
+            <td><a href="{{ url_for('delete', request_id=req.id) }}">delete</a></td>
         </tr>
         {% endfor %}
         </tbody>
