@@ -16,19 +16,22 @@
 <div style="width:90%; margin: 0 auto;">
     <div>
         <strong>Storage:</strong> <select name="storage" id="storage" class="btn btn-default">
-        <option value="all">All</option>
-        <option value="filesystem">Filesystem</option>
-        <option value="dbm">DBM</option>
+        <option value="all">all</option>
+        {% for storage in distinct_storage %}
+            <option value="{{ storage.name }}">{{ storage.name }}</option>
+        {% endfor %}
     </select>
         <strong>Spider:</strong> <select name="spider" id="spider" class="btn btn-default">
-        <option value="all">All</option>
-        <option value="baidu">baidu</option>
-        <option value="wangyi">wangyi</option>
+        <option value="all">all</option>
+        {% for spider in distinct_spider %}
+            <option value="{{ spider.name }}">{{ spider.name }}</option>
+        {% endfor %}
     </select>
         <strong>ParseFunc:</strong> <select name="parse_func" id="parse_func" class="btn btn-default">
-        <option value="all">All</option>
-        <option value="parse">parse</option>
-        <option value="parse_detail">parse_detail</option>
+        <option value="all">all</option>
+        {% for parse_func in distinct_parse_func %}
+            <option value="{{ parse_func.name }}">{{ parse_func.name }}</option>
+        {% endfor %}
     </select>
         <button id="commit" class="btn btn-default" style="float: right;">Commit</button>
     </div>

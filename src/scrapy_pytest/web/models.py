@@ -20,7 +20,7 @@ class Spider(db.Model):
     storage_id = db.Column(db.Integer, db.ForeignKey('storage.id'))
     name = db.Column(db.String(40), nullable=False)
 
-    storage = db.relationship('Storage', backref='spider')
+    storage = db.relationship('Storage', backref='spiders')
 
     def __repr__(self):
         return '<Spider(id=%s, name=%s, storage_id=%s)>' % (self.id, self.name, self.storage_id)
@@ -33,7 +33,7 @@ class ParseFunc(db.Model):
     name = db.Column(db.String(40), nullable=False)
     spider_id = db.Column(db.Integer, db.ForeignKey('spider.id'))
 
-    spider = db.relationship('Spider', backref='parse_func')
+    spider = db.relationship('Spider', backref='parse_funcs')
 
     def __repr__(self):
         return '<ParseFunc(id=%s, name=%s, spider_id=%s)>' % (self.id, self.name, self.spider_id)
@@ -46,11 +46,11 @@ class Request(db.Model):
     parse_func_id = db.Column(db.Integer, db.ForeignKey('parse_func.id'))
     storage_id = db.Column(db.Integer, db.ForeignKey('storage.id'))
     spider_id = db.Column(db.Integer, db.ForeignKey('spider.id'))
-    data = db.Column(db.Binary, nullable=False)
+    data = db.Column(db.PickleType, nullable=False)
 
-    parse_func = db.relationship('ParseFunc', backref='request')
-    spider = db.relationship('Spider', backref='request')
-    storage = db.relationship('Storage', backref='request')
+    parse_func = db.relationship('ParseFunc', backref='requests')
+    spider = db.relationship('Spider', backref='requests')
+    storage = db.relationship('Storage', backref='requests')
 
     def __repr__(self):
         return '<Request(id=%s, name=%s, parse_func_id=%s, spider=%s, storage=%s)>' % (

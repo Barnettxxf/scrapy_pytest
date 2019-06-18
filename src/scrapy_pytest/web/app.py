@@ -5,7 +5,7 @@ import pickle
 from .config import DevelopmentConfig
 from .common import save_data
 from .exts import db
-from .models import Request, Storage
+from .models import Request, Storage, Spider, ParseFunc
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -18,14 +18,12 @@ with app.app_context():
 
 @app.template_filter('loads_url')
 def loads_meta(value):
-    dat = pickle.loads(value)
-    return dat['url']
+    return value['url']
 
 
 @app.template_filter('loads_meta')
 def loads_meta(value):
-    dat = pickle.loads(value)
-    return dat['meta']
+    return value['meta']
 
 
 @app.route('/')
@@ -38,7 +36,12 @@ def home():
     total = Request.query.count()
     reqs = Request.query.slice(start, end)
     pagination = Pagination(bs_version=3, page=page, total=total)
-    return render_template('index.html', **{'reqs': reqs, 'pagination': pagination})
+
+    distinct_storage = Storage.query.with_entities(Storage.name).distinct().all()
+    distinct_spider = Spider.query.with_entities(Spider.name).distinct().all()
+    distinct_parse_func = ParseFunc.query.with_entities(ParseFunc.name).distinct().all()
+    return render_template('index.html', **{'reqs': reqs, 'pagination': pagination, 'distinct_storage': distinct_storage,
+                                            'distinct_spider': distinct_spider, 'distinct_parse_func': distinct_parse_func})
 
 
 @app.route('/filter')
@@ -58,16 +61,15 @@ def filter_req():
             start, end)
     rows = []
     for req in reqs:
-        reqd = pickle.loads(req.data)
         rows.append(dict(
             id=req.id,
             storage=req.storage.name,
             spider=req.spider.name,
             parse_func=req.parse_func.name,
-            url=reqd['url'],
-            meta=reqd['meta']
+            url=req.data['url'],
+            meta=req.data['meta']
         ))
-    return jsonify({
+    return jsonify(**{
         'rows': rows,
         'per_page': PER_PAGE,
         'page': page,

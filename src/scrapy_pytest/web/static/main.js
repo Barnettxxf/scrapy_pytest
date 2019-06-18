@@ -17,6 +17,7 @@ function filter() {
             }
             console.log(str);
             $('#content').html(str);
+            $('.pagination').html('');
         });
     })
 }
