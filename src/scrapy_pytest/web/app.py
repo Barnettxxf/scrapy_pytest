@@ -52,6 +52,8 @@ def filter_req():
     save_data()
     storage = request.args.get('storage', 'all')
     spider = request.args.get('spider', 'all')
+    if storage == 'all' and spider == 'all':
+        return redirect(url_for('home'))
     page = request.args.get(get_page_parameter(), default=1, type=int)
     start = (page - 1) * PER_PAGE
     end = start + PER_PAGE
