@@ -28,13 +28,15 @@
         {% endfor %}
     </select>
         <button id="commit" class="btn btn-default" style="float: right;">Commit</button>
+        <button id="delete" class="btn btn-default" style="float: right;">Delete</button>
     </div>
     <table class="table table-striped table-hover">
         <thead>
         <tr>
+            <td><input type="checkbox" id="select-all"></td>
             <th>Id</th>
             <th>Storage</th>
-            <th>Spider Name</th>
+            <th>Spider</th>
             <th>Parse Func</th>
             <th>Request URL</th>
             <th>Request Meta</th>
@@ -44,6 +46,7 @@
         <tbody id="content">
         {% for req in reqs %}
         <tr data-id="{{ req.id }}">
+            <td><input type="checkbox"></td>
             <td>{{ req.id }}</td>
             <td>{{ req.storage.name }}</td>
             <td>{{ req.spider.name }}</td>

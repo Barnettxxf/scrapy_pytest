@@ -18,3 +18,34 @@
         });
     })
 })();
+
+
+(function () {
+    $('#select-all').on('click', function (e) {
+        let is_select_all = $('#select-all').prop('checked');
+        if (is_select_all) {
+            $('input[type=checkbox]').each(function (index, item) {
+                $(this).attr('checked', true);
+            })
+        } else {
+            $('input[type=checkbox]').each(function (index, item) {
+                $(this).attr('checked', false);
+            })
+        }
+    });
+})();
+
+(function () {
+    $('#delete').on('click', function (e) {
+        e.preventDefault();
+        $('input:checkbox:checked').each(function (index, item) {
+            let req_id = $(this).parent().parent().attr('data-id');
+            if (req_id) {
+                superagent.get(`/del?request_id=${req_id}`).end(function (err, data) {
+                    if (err) throw err;
+                    location.reload();
+                });
+            }
+        })
+    })
+})();

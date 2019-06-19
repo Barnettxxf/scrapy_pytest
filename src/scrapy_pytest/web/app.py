@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
-from flask_paginate import Pagination, get_page_parameter
+from flask_paginate import Pagination, get_page_parameter, get_per_page_parameter
 
 from ..mock import mock_spidercls
 from ..utils.request import request_from_dict
@@ -29,14 +29,14 @@ def loads_meta(value):
 
 @app.route('/')
 def home():
-    PER_PAGE = 15
     save_data()
     page = request.args.get(get_page_parameter(), default=1, type=int)
-    start = (page - 1) * PER_PAGE
-    end = start + PER_PAGE
+    per_page = request.args.get(get_per_page_parameter(), default=15, type=int)
+    start = (page - 1) * per_page
+    end = start + per_page
     total = Request.query.count()
     reqs = Request.query.slice(start, end)
-    pagination = Pagination(bs_version=3, page=page, total=total)
+    pagination = Pagination(bs_version=3, page=page, total=total, per_page=per_page)
 
     distinct_storage = Storage.query.with_entities(Storage.name).distinct().all()
     distinct_spider = Spider.query.with_entities(Spider.name).distinct().all()
