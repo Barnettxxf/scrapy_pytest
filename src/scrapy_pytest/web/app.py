@@ -83,10 +83,11 @@ def filter_req():
 def delete():
     request_id = request.args.get('request_id')
     if request_id:
-        req = Request.query.filter_by(id=request_id).fisrt()
+        req = Request.query.filter_by(id=request_id).first()
         if req:
             _spidercls = mock_spidercls()
-            _request = request_from_dict(req.data, _spidercls)
+            _spidercls.name = req.spider.name
+            _request = request_from_dict(dict(request=req.data), _spidercls)
             storage_name = req.storage.name
             delete_cache(storage_name, _spidercls, _request)
 
