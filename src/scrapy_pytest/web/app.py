@@ -51,6 +51,7 @@ def filter_req():
     PER_PAGE = 15
     save_data()
     storage = request.args.get('storage', 'all')
+    spider = request.args.get('spider', 'all')
     page = request.args.get(get_page_parameter(), default=1, type=int)
     start = (page - 1) * PER_PAGE
     end = start + PER_PAGE
@@ -63,14 +64,25 @@ def filter_req():
             start, end)
     rows = []
     for req in reqs:
-        rows.append(dict(
-            id=req.id,
-            storage=req.storage.name,
-            spider=req.spider.name,
-            parse_func=req.parse_func.name,
-            url=req.data['url'],
-            meta=req.data['meta']
-        ))
+        if spider == 'all':
+            rows.append(dict(
+                id=req.id,
+                storage=req.storage.name,
+                spider=req.spider.name,
+                parse_func=req.parse_func.name,
+                url=req.data['url'],
+                meta=req.data['meta']
+            ))
+        else:
+            if req.spider.name == spider:
+                rows.append(dict(
+                    id=req.id,
+                    storage=req.storage.name,
+                    spider=req.spider.name,
+                    parse_func=req.parse_func.name,
+                    url=req.data['url'],
+                    meta=req.data['meta']
+                ))
     return jsonify(**{
         'rows': rows,
         'per_page': PER_PAGE,
