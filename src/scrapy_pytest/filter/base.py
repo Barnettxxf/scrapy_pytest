@@ -68,3 +68,20 @@ class BaseFilter:
     @property
     def data(self) -> list:
         return self._container
+
+    def in_(self, target, prop):
+        return self[f'{target}__in__{prop}']
+
+    keyin = in_
+
+    def eq(self, target, prop):
+        return self[f'{target}__eq__{prop}']
+
+    def lt(self, target, prop):
+        return self[f'{target}__lt__{prop}']
+
+    def gt(self, target, prop):
+        return self[f'{target}__gt__{prop}']
+
+    def valuein(self, target, prop):
+        return self[f'{target}__valuein__{prop}']
