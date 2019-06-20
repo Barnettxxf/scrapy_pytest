@@ -40,10 +40,9 @@ def home():
 
     distinct_storage = Storage.query.with_entities(Storage.name).distinct().all()
     distinct_spider = Spider.query.with_entities(Spider.name).distinct().all()
-    distinct_parse_func = ParseFunc.query.with_entities(ParseFunc.name).distinct().all()
     return render_template('index.html',
                            **{'reqs': reqs, 'pagination': pagination, 'distinct_storage': distinct_storage,
-                              'distinct_spider': distinct_spider, 'distinct_parse_func': distinct_parse_func})
+                              'distinct_spider': distinct_spider})
 
 
 @app.route('/filter')
