@@ -10,7 +10,7 @@
 
             let str = '';
             for (let row of data.body.rows) {
-                str = str + `<tr><td>${row.id}</td><td>${row.storage}</td><td>${row.spider}</td><td>${row.parse_func}</td><td>${row.url}</td><td>${JSON.stringify(row.meta)}</td><td><a href="/del?request_id=${row.id}">delete</a></td></td></tr>`;
+                str = str + `<td><input type="checkbox"></td><tr><td>${row.id}</td><td>${row.storage}</td><td>${row.spider}</td><td>${row.parse_func}</td><td>${row.url}</td><td>${JSON.stringify(row.meta)}</td><td><a href="/del?request_id=${row.id}">delete</a></td></td></tr>`;
             }
             console.log(str);
             $('#content').html(str);
