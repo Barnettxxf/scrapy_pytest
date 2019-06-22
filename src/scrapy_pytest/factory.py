@@ -1,11 +1,12 @@
 import os
 from collections import defaultdict
 
+import six
 from scrapy.utils.misc import load_object
 import pickle
 
 from .utils.templates import create_subfile, tmpl_fixture, tmpl_fixture_import, \
-    tmpl_parse_func, tmpl_fixture_spider, create_init
+    tmpl_parse_func, tmpl_fixture_spider, create_init, tmpl_plugin, tmpl_plugins_file_header
 from . import RetrieveResponse, env
 from .utils.request import request_from_dict
 from .env import Settings
@@ -80,10 +81,14 @@ class ResponseFactory:
 
 
 class TemplateFactory:
-    def __init__(self, spider_cls, project_dir=None, settings=Settings(), test_dir_name='tests'):
+    def __init__(self, spider_cls, project_dir=None, plugins=None, settings=Settings(), test_dir_name='tests'):
         self.rsp_factory = ResponseFactory(spider_cls, settings)
         self.project_dir = project_dir or os.getcwd()
         self.test_dir_name = test_dir_name
+
+        if isinstance(plugins, six.string_types):
+            plugins = [plugins]
+        self.plugins = plugins
         self.spider_cls = spider_cls
 
         test_dir = os.path.join(self.project_dir, self.test_dir_name)
@@ -120,7 +125,23 @@ class TemplateFactory:
         fixture_spider = tmpl_fixture_spider.substitute(**{
             'spider': spider_name
         }).strip()
-        conftest = '\n\n\n'.join([fixture_import, fixture_spider, fixture])
+
+        plugins_header = None
+        if self.plugins:
+            plugins_strings = []
+            for plugin_name in self.plugins:
+                plugins_strings.append(tmpl_plugin.substitute(**{'plugin': plugin_name}).strip())
+
+            plugins_strings_plain = ', '.join(plugins_strings)
+            if ',' not in plugins_strings_plain:
+                plugins_strings_plain += ','
+            plugins_header = tmpl_plugins_file_header.substitute(**{'plugins': plugins_strings_plain}).strip()
+
+        conftest_list = [fixture_import, fixture_spider, fixture]
+
+        if plugins_header:
+            conftest_list.insert(1, plugins_header)
+        conftest = '\n\n\n'.join(conftest_list)
         parse_func = '\n\n\n'.join(parse_func_tmpls)
         create_subfile(self.test_spider_dir, 'conftest', conftest + '\n')
         create_subfile(self.test_spider_dir, 'test_parse', parse_func + '\n')

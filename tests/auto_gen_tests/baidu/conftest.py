@@ -16,6 +16,9 @@ def empty(request):
     request.addfinalizer(rsp_factory.close)
 
 
+pytest_plugins = ('scrapy_pytest.plugins.ymspider','scrapy_pytest.plugins.ymspider')
+
+
 @pytest.fixture
 def BaiduSpider():
     return _BaiduSpider

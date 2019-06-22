@@ -1,6 +1,14 @@
 import os
 from string import Template
 
+tmpl_plugins_file_header = Template("""
+pytest_plugins = (${plugins})
+""")
+
+tmpl_plugin = Template("""
+'scrapy_pytest.plugins.${plugin}'
+""")
+
 tmpl_fixture = Template("""
 @pytest.fixture(scope="module", params=rsp_factory.result['${spider_parse_func}'])
 def ${spider_parse_func}_response(empty, request):
@@ -43,13 +51,6 @@ def test_${spider_parse_func}(${spider_parse_func}_response, ${spider}):
         # specified operation
         pass
 """)
-
-
-def create_plugins(target_dir, plugin_names):
-    with open(os.path.join(target_dir, 'conftest.py'), 'w', encoding='utf-8') as f:
-        f.write("# automatically created by scrapy_pytest\n\n\n")
-        for plugin_name in plugin_names:
-            f.write(f"pytest_plugins = ('scrapy_pytest.plugins.{plugin_name}', )\n")
 
 
 def create_init(target_dir):
