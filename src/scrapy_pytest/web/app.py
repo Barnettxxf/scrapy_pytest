@@ -51,12 +51,10 @@ def filter_req():
     save_data()
     storage = request.args.get('storage', 'all')
     spider = request.args.get('spider', 'all')
-    if storage == 'all' and spider == 'all':
-        return redirect(url_for('home'))
     page = request.args.get(get_page_parameter(), default=1, type=int)
     start = (page - 1) * PER_PAGE
     end = start + PER_PAGE
-    if storage == 'all':
+    if storage.strip() == 'all':
         total = Request.query.count()
         reqs = Request.query.slice(start, end)
     else:
@@ -65,7 +63,7 @@ def filter_req():
             start, end)
     rows = []
     for req in reqs:
-        if spider == 'all':
+        if spider.strip() == 'all':
             rows.append(dict(
                 id=req.id,
                 storage=req.storage.name,
@@ -106,7 +104,12 @@ def delete():
 
             db.session.delete(req)
             db.session.commit()
-    return redirect(url_for('home'))
+    return jsonify(**dict(
+        success=True,
+        code=0,
+        data=[],
+        message=''
+    ))
 
 
 if __name__ == '__main__':

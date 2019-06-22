@@ -52,7 +52,7 @@
             <td>{{ req.parse_func.name }}</td>
             <td>{{ req.data | loads_url }}</td>
             <td>{{ req.data | loads_meta }}</td>
-            <td><a href="{{ url_for('delete', request_id=req.id) }}">delete</a></td>
+            <td class="for-delete"><a href="#">delete</a></td>
         </tr>
         {% endfor %}
         </tbody>
