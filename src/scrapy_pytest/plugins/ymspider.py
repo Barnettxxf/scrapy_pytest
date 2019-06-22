@@ -18,7 +18,7 @@ def scheduler(monkeypatch):
 
     monkeypatch.setattr('scheduler.Scheduler.publish', fake_publish)
     monkeypatch.setattr('scheduler.Scheduler.ack', fake_ack)
-    monkeypatch.setattr('scheduler.Scheduler.fake_nack', fake_nack)
+    monkeypatch.setattr('scheduler.Scheduler.nack', fake_nack)
 
 
 @pytest.fixture(autouse=True)
