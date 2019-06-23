@@ -12,6 +12,11 @@
 <body>
 <h2 class="text-center">HTTPCache Manager</h2>
 
+{% macro make_options(data) -%}
+    {%- for each in data %}
+        <option value="{{ each.name }}">{{ each.name }}</option>
+    {%- endfor %}
+{%- endmacro %}
 
 <div style="width:90%; margin: 0 auto;">
     <div>
@@ -19,21 +24,18 @@
             <strong>Storage:</strong> <select name="storage" id="storage"
                                               class="btn btn-default">
             <option value="all">all</option>
-            {% for storage in distinct_storage %}
-                <option value="{{ storage.name }}">{{ storage.name }}</option>
-            {% endfor %}
+            {{ make_options(distinct_storage) }}
         </select>
             <strong>Spider:</strong> <select name="spider" id="spider"
                                              class="btn btn-default">
             <option value="all">all</option>
-            {% for spider in distinct_spider %}
-                <option value="{{ spider.name }}">{{ spider.name }}</option>
-            {% endfor %}
+            {{ make_options(distinct_spider) }}
         </select></div>
         <div>
-            <button id="delete" class="btn btn-default" style="float: left;">Delete</button>
+            <button id="delete" class="btn btn-default">Delete</button>
         </div>
     </div>
+    <hr style="margin: 5px 0;">
     <table class="table table-striped table-hover">
         <thead>
         <tr>
