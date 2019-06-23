@@ -68,13 +68,16 @@ def home():
     page = request.args.get(get_page_parameter(), default=1, type=int)
     total, reqs = filter_reqs(storage, spider, start, end)
 
-    pagination = Pagination(bs_version=3, page=page, total=total, per_page=per_page, format_total=True, format_number=True)
+    pagination = Pagination(bs_version=3, page=page, total=total, per_page=per_page, format_total=True,
+                            format_number=True)
 
     distinct_storage = Storage.query.with_entities(Storage.name).distinct().all()
     distinct_spider = Spider.query.with_entities(Spider.name).distinct().all()
-    return render_template('index.html',
-                           **{'reqs': reqs, 'pagination': pagination, 'distinct_storage': distinct_storage,
-                              'distinct_spider': distinct_spider, 'current_storage': storage, 'current_spider': spider})
+    context = {
+        'reqs': reqs, 'pagination': pagination, 'distinct_storage': distinct_storage,
+        'distinct_spider': distinct_spider, 'current_storage': storage, 'current_spider': spider
+    }
+    return render_template('index.html', **context)
 
 
 @app.route('/filter')
