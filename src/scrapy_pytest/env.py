@@ -1,17 +1,17 @@
 import os
 from .settings import Settings
 
-default_settings = Settings()
+settings = Settings()
 
 
 def update(name, value):
-    default_settings.update(
+    settings.update(
         {name: value}, priority='spider'
     )
 
 
 def get(name, default=None):
-    return default_settings.get(name, default)
+    return settings.get(name, default)
 
 
 def get_httpcache_dir():
@@ -34,12 +34,12 @@ def get_httpcache_storage():
 
 
 def keys():
-    return default_settings.keys()
+    return settings.keys()
 
 
 def values():
-    return default_settings.values()
+    return settings.values()
 
 
 def items():
-    return default_settings.items()
+    return settings.items()

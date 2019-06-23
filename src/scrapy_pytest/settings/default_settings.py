@@ -6,3 +6,4 @@ HTTPCACHE_GZIP = False
 HTTPCACHE_STORAGE = 'scrapy_pytest.storage.DbmCacheStorage'
 HTTPCACHE_DBM_MODULE = 'anydbm' if six.PY2 else 'dbm'
 HTTPCACHE_ALWAYS_STORE = True
+HTTPCACHE_ENABLED = True
