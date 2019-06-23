@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask_paginate import Pagination, get_page_parameter, get_per_page_parameter
 
@@ -7,10 +9,15 @@ from .config import DevelopmentConfig
 from .common import save_data, delete_cache
 from .exts import db
 from .models import Request, Storage, Spider, ParseFunc
+from .. import env
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 db.init_app(app)
+
+if os.environ.get('HTTPCACHE_DIR'):
+    env.set_httpcache_dir(os.environ.get('HTTPCACHE_DIR'))
+    app.logger.info('GET httpcache from environ - %s', os.environ['HTTPCACHE_DIR'])
 
 with app.app_context():
     db.drop_all()

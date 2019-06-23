@@ -1,3 +1,5 @@
+import os
+
 from .web.app import app
 import click
 from . import env
@@ -10,6 +12,7 @@ from . import env
 def run(port, host, httpcache):
     if httpcache:
         env.set_httpcache_dir(httpcache)
+
     app.run(host=host, port=port)
 
 

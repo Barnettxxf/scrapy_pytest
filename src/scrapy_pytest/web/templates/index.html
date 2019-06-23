@@ -15,19 +15,23 @@
 
 <div style="width:90%; margin: 0 auto;">
     <div>
-        <strong>Storage:</strong> <select name="storage" id="storage" class="btn btn-default">
-        <option value="all">all</option>
-        {% for storage in distinct_storage %}
-        <option value="{{ storage.name }}">{{ storage.name }}</option>
-        {% endfor %}
-    </select>
-        <strong>Spider:</strong> <select name="spider" id="spider" class="btn btn-default">
-        <option value="all">all</option>
-        {% for spider in distinct_spider %}
-        <option value="{{ spider.name }}">{{ spider.name }}</option>
-        {% endfor %}
-    </select>
-        <button id="delete" class="btn btn-default" style="float: right;">Delete</button>
+        <div style="float: right;"><strong >Storage:</strong> <select name="storage" id="storage"
+                                                                     class="btn btn-default">
+            <option value="all">all</option>
+            {% for storage in distinct_storage %}
+                <option value="{{ storage.name }}">{{ storage.name }}</option>
+            {% endfor %}
+        </select>
+            <strong>Spider:</strong> <select name="spider" id="spider"
+                                                                   class="btn btn-default">
+                <option value="all">all</option>
+                {% for spider in distinct_spider %}
+                    <option value="{{ spider.name }}">{{ spider.name }}</option>
+                {% endfor %}
+            </select></div>
+        <div>
+            <button id="delete" class="btn btn-default" style="float: left;">Delete</button>
+        </div>
     </div>
     <table class="table table-striped table-hover">
         <thead>
@@ -39,21 +43,19 @@
             <th>Parse Func</th>
             <th>Request URL</th>
             <th>Request Meta</th>
-            <th>Delete</th>
         </tr>
         </thead>
         <tbody id="content">
         {% for req in reqs %}
-        <tr data-id="{{ req.id }}">
-            <td><input type="checkbox"></td>
-            <td>{{ req.id }}</td>
-            <td>{{ req.storage.name }}</td>
-            <td>{{ req.spider.name }}</td>
-            <td>{{ req.parse_func.name }}</td>
-            <td>{{ req.data | loads_url }}</td>
-            <td>{{ req.data | loads_meta }}</td>
-            <td class="for-delete"><a href="#">delete</a></td>
-        </tr>
+            <tr data-id="{{ req.id }}">
+                <td><input type="checkbox"></td>
+                <td>{{ req.id }}</td>
+                <td>{{ req.storage.name }}</td>
+                <td>{{ req.spider.name }}</td>
+                <td>{{ req.parse_func.name }}</td>
+                <td>{{ req.data | loads_url }}</td>
+                <td>{{ req.data | loads_meta }}</td>
+            </tr>
         {% endfor %}
         </tbody>
     </table>
