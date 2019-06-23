@@ -12,9 +12,13 @@
             for (let row of data.body.rows) {
                 str = str + `<tr><td><input type="checkbox"></td><td>${row.id}</td><td>${row.storage}</td><td>${row.spider}</td><td>${row.parse_func}</td><td>${row.url}</td><td>${JSON.stringify(row.meta)}</td></tr>`;
             }
-            console.log(str);
+            let page_str = '<li class="previous disabled unavailable"><a> &laquo; </a></li><li class="active"><a>1</a></li>';
+            for (let i=2; i < data.body.rows.length / 15 - 1; i++) {
+                page_str += `<li><a href="/?page=${i}">${i}</a></li>`
+            }
+            page_str += `<li class="next"><a href="/?page=${data.body.rows.length / 15 + 1}">&raquo;</a></li>`;
             $('#content').html(str);
-            $('.pagination').html('');
+            $('.pagination').html(page_str);
         });
     })
 })();
