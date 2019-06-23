@@ -34,6 +34,28 @@ def loads_meta(value):
     return value['meta']
 
 
+def filter_reqs(storage, spider, start, end):
+    if storage.strip() == 'all' and spider == 'all':
+        total = Request.query.count()
+        reqs = Request.query.slice(start, end)
+    elif storage != 'all' and spider == 'all':
+        total = Request.query.join(Storage, Storage.id == Request.storage_id).filter(
+            Storage.name == storage).count()
+        reqs = Request.query.join(Storage, Storage.id == Request.storage_id).filter(Storage.name == storage).slice(
+            start, end)
+    elif storage == 'all' and spider != 'all':
+        total = Request.query.join(Spider, Spider.id == Request.spider_id).filter(
+            Spider.name == spider).count()
+        reqs = Request.query.join(Spider, Spider.id == Request.spider_id).filter(Spider.name == spider).slice(
+            start, end)
+    else:
+        total = Request.query.join(Storage, Storage.id == Request.storage_id).filter(Storage.name == storage) \
+            .join(Spider, Spider.id == Request.spider_id).filter(Spider.name == spider).count()
+        reqs = Request.query.join(Storage, Storage.id == Request.storage_id).filter(Storage.name == storage) \
+            .join(Spider, Spider.id == Request.spider_id).filter(Spider.name == spider).slice(start, end)
+    return total, reqs
+
+
 @app.route('/')
 def home():
     save_data()
@@ -41,57 +63,43 @@ def home():
     per_page = request.args.get(get_per_page_parameter(), default=15, type=int)
     start = (page - 1) * per_page
     end = start + per_page
-    total = Request.query.count()
-    reqs = Request.query.slice(start, end)
-    pagination = Pagination(bs_version=3, page=page, total=total, per_page=per_page)
+    storage = request.args.get('storage', 'all')
+    spider = request.args.get('spider', 'all')
+    page = request.args.get(get_page_parameter(), default=1, type=int)
+    total, reqs = filter_reqs(storage, spider, start, end)
+
+    pagination = Pagination(bs_version=3, page=page, total=total, per_page=per_page, format_total=True, format_number=True)
 
     distinct_storage = Storage.query.with_entities(Storage.name).distinct().all()
     distinct_spider = Spider.query.with_entities(Spider.name).distinct().all()
     return render_template('index.html',
                            **{'reqs': reqs, 'pagination': pagination, 'distinct_storage': distinct_storage,
-                              'distinct_spider': distinct_spider})
+                              'distinct_spider': distinct_spider, 'current_storage': storage, 'current_spider': spider})
 
 
 @app.route('/filter')
 def filter_req():
-    PER_PAGE = 15
     save_data()
     storage = request.args.get('storage', 'all')
     spider = request.args.get('spider', 'all')
+    per_page = request.args.get('per_page', default=15, type=int)
     page = request.args.get(get_page_parameter(), default=1, type=int)
-    start = (page - 1) * PER_PAGE
-    end = start + PER_PAGE
-    if storage.strip() == 'all':
-        total = Request.query.count()
-        reqs = Request.query.slice(start, end)
-    else:
-        total = Request.query.join(Storage, Storage.id == Request.storage_id).filter(Storage.name == storage).count()
-        reqs = Request.query.join(Storage, Storage.id == Request.storage_id).filter(Storage.name == storage).slice(
-            start, end)
+    start = (page - 1) * per_page
+    end = start + per_page
+    total, reqs = filter_reqs(storage, spider, start, end)
     rows = []
     for req in reqs:
-        if spider.strip() == 'all':
-            rows.append(dict(
-                id=req.id,
-                storage=req.storage.name,
-                spider=req.spider.name,
-                parse_func=req.parse_func.name,
-                url=req.data['url'],
-                meta=req.data['meta']
-            ))
-        else:
-            if req.spider.name == spider:
-                rows.append(dict(
-                    id=req.id,
-                    storage=req.storage.name,
-                    spider=req.spider.name,
-                    parse_func=req.parse_func.name,
-                    url=req.data['url'],
-                    meta=req.data['meta']
-                ))
+        rows.append(dict(
+            id=req.id,
+            storage=req.storage.name,
+            spider=req.spider.name,
+            parse_func=req.parse_func.name,
+            url=req.data['url'],
+            meta=req.data['meta']
+        ))
     return jsonify(**{
         'rows': rows,
-        'per_page': PER_PAGE,
+        'per_page': per_page,
         'page': page,
         'total': total
     })

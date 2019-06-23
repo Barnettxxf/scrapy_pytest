@@ -28,7 +28,7 @@ class WangyiSpider(scrapy.Spider):
                 yield scrapy.Request(url=link, headers={
                     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'},
                                      callback=self.parse_detail)
-            if i == 6:
+            if i == 20:
                 break
             yield {'link': link, 'text': text}
 

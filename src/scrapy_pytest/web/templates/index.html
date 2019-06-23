@@ -15,20 +15,21 @@
 
 <div style="width:90%; margin: 0 auto;">
     <div>
-        <div style="float: right;"><strong >Storage:</strong> <select name="storage" id="storage"
-                                                                     class="btn btn-default">
+        <div style="float: right;">
+            <strong>Storage:</strong> <select name="storage" id="storage"
+                                              class="btn btn-default">
             <option value="all">all</option>
             {% for storage in distinct_storage %}
                 <option value="{{ storage.name }}">{{ storage.name }}</option>
             {% endfor %}
         </select>
             <strong>Spider:</strong> <select name="spider" id="spider"
-                                                                   class="btn btn-default">
-                <option value="all">all</option>
-                {% for spider in distinct_spider %}
-                    <option value="{{ spider.name }}">{{ spider.name }}</option>
-                {% endfor %}
-            </select></div>
+                                             class="btn btn-default">
+            <option value="all">all</option>
+            {% for spider in distinct_spider %}
+                <option value="{{ spider.name }}">{{ spider.name }}</option>
+            {% endfor %}
+        </select></div>
         <div>
             <button id="delete" class="btn btn-default" style="float: left;">Delete</button>
         </div>
@@ -66,5 +67,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/superagent"></script>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
+{% if current_spider != 'all' %}
+    <script>$('#spider').val('{{ current_spider }}')</script>
+{% endif %}
+{% if current_storage != 'all' %}
+    <script>$('#storage').val('{{ current_storage }}')</script>
+{% endif %}
 </body>
 </html>
