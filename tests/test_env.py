@@ -26,3 +26,8 @@ def test_update():
 def test_httpcache():
     env.set_httpcache_dir(cache_dir)
     assert Settings().get('HTTPCACHE_DIR') == env.get_httpcache_dir()
+
+
+def test_settings():
+    from scrapy_pytest import env
+    print(dict(env.items()))
