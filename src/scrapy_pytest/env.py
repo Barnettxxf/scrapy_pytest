@@ -43,3 +43,11 @@ def values():
 
 def items():
     return settings.items()
+
+
+def set_always_store():
+    update('HTTPCACHE_ALWAYS_STORE', True)
+
+
+def cancel_always_store():
+    update('HTTPCACHE_ALWAYS_STORE', False)
