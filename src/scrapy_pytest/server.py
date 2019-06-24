@@ -21,7 +21,7 @@ def run(port, host, httpcache, init_db):
     app.run(host=host, port=port)
 
 
-@click.command(help='init database from httpcache_dir')
+@click.command(help='init database from httpcache_dir, which will generate a sqlite database file')
 @click.option('--httpcache', '-c', default='', help='httpcache dir')
 def init_db(httpcache):
     if httpcache:
