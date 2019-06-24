@@ -7,7 +7,7 @@ from . import env
 @click.option('--port', '-p', default=5000, help='web server port', type=int)
 @click.option('--host', '-h', default='127.0.0.1', help='web server host', type=str)
 @click.option('--httpcache', '-c', default='', help='httpcache dir')
-@click.option('--init_db', default=False, type=bool, help='httpcache dir')
+@click.option('--init_db', default=False, type=bool, help='whether init db or not, default not')
 def run(port, host, httpcache, init_db):
     if httpcache:
         env.set_httpcache_dir(httpcache)
