@@ -19,10 +19,6 @@ if os.environ.get('HTTPCACHE_DIR'):
     env.set_httpcache_dir(os.environ.get('HTTPCACHE_DIR'))
     app.logger.info('GET httpcache from environ - %s', os.environ['HTTPCACHE_DIR'])
 
-with app.app_context():
-    db.drop_all()
-    db.create_all()
-
 
 @app.template_filter('loads_url')
 def loads_meta(value):
