@@ -80,7 +80,7 @@ class DbmCacheStorage(_DbmCacheStorage):
 
     def find_request_path(self, spider_cls):
         paths = []
-        for k, v in self.db.items():
+        for k in self.db.keys():
             if k.endswith(b'_data'):
                 paths.append(k.split(b'_')[0].decode())
         return paths
