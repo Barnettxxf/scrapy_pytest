@@ -10,12 +10,12 @@
 
             let str = '';
             for (let row of data.body.rows) {
-                str = str + `<tr><td><input type="checkbox"></td><td>${row.id}</td><td>${row.storage}</td><td>${row.spider}</td><td>${row.parse_func}</td><td>${row.url}</td><td>${JSON.stringify(row.meta)}</td></tr>`;
+                str = str + `<tr data-id="${row.id}"><td><input type="checkbox"></td><td>${row.id}</td><td>${row.storage}</td><td>${row.spider}</td><td>${row.parse_func}</td><td>${row.url}</td><td>${JSON.stringify(row.meta)}</td></tr>`;
             }
             let page_str = '<li class="previous disabled unavailable"><a> &laquo; </a></li><li class="active"><a>1</a></li>';
             let dot_page = false;
             for (let i = 2; i < data.body.total / data.body.per_page + 1; i++) {
-                if (i > 5 || i < (data.body.total / data.body.per_page + 1) - 5) {
+                if (i > 3 && i < (data.body.total / data.body.per_page + 1) - 5) {
                     if (!dot_page) {
                         page_str += `<li class="disabled unavailable"><a>...</a></li>`;
                         dot_page = true;
@@ -54,9 +54,9 @@
 (function () {
     $('#delete').on('click', function (e) {
         e.preventDefault();
-        $('input:checkbox:checked').each(function (index, item) {
+        $('input:checkbox:checked').each(function (index) {
             let tr = $(this).parent().parent();
-            let req_id = tr.attr('data-id');
+            let req_id = tr.data('id');
             if (req_id) {
                 superagent.get(`/del?request_id=${req_id}`).end(function (err, data) {
                     if (err) throw err;

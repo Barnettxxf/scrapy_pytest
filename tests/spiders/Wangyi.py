@@ -38,6 +38,10 @@ class WangyiSpider(scrapy.Spider):
             link = a.xpath('./@href').get()
             text = a.xpath('./text()').get()
             yield {'link': link, 'text': text}
+            if link.startswith('http'):
+                yield scrapy.Request(url=link, headers={
+                    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'
+                })
 
 
 if __name__ == '__main__':
